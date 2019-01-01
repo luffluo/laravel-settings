@@ -1,0 +1,30 @@
+{
+    "name": "luffluo/laravel-settings",
+    "description": "Package description here.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "luffluo",
+            "email": "luffluo@outlook.com"
+        }
+    ],
+    "require": {
+        "php": ">=7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Luffluo\\LaravelSettings\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "component": "package",
+        "laravel": {
+            "providers": [
+                "Luffluo\\LaravelSettings\\ServiceProvider"
+            ]
+        }
+    }
+}
