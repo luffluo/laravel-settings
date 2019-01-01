@@ -13,8 +13,6 @@ Add the middleware 'Luffluo\\LaravelSettings\\SaveMiddleware' to your middleware
 ```php
 setting('key', 'default') // get
 
-setting('key', 'value')->save() // set
-
 setting(['key' => 'value'])->save() // set
 
 setting()->all(); // get all

@@ -28,7 +28,7 @@ class JsonStore extends AbstractStore
     {
         $this->files = $files;
 
-        $this->setPath($path ?? storage_path() . '/settings.json');
+        $this->setPath($path ?? storage_path('app/settings.json'));
     }
 
     protected function read()
