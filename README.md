@@ -3,7 +3,7 @@
 ## Installing
 
 ```shell
-$ composer require luffluo/laravel-settings:~1.0
+$ composer require luffluo/laravel-settings:~1.1
 ```
 
 ## Usage
