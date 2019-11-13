@@ -7,57 +7,63 @@ use Illuminate\Support\Arr;
 abstract class AbstractStore
 {
     /**
+     * Cache key for save
+     */
+    const CACHE_KEY = 'setting:cache';
+
+    /**
+     * The setting data.
+     *
      * @var array
      */
-    protected $items = [];
+    protected $data = [];
 
-    protected $loaded = false;
-
+    /**
+     * Whether the store has changed since it was last loaded.
+     *
+     * @var boolean
+     */
     protected $unsaved = false;
 
     /**
-     * Determine if the given option value exists.
+     * Whether the setting data are loaded.
      *
-     * @param     $key
-     * @param int $user_id
+     * @var boolean
+     */
+    protected $loaded = false;
+
+    /**
+     * Get a specific key from the setting data.
      *
-     * @return bool
+     * @param string|array $key
+     * @param mixed $default Optional default value.
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        $this->load();
+
+        return Arr::get($this->data, $key, $default);
+    }
+
+    /**
+     * Determine if a key exists in the setting data.
+     *
+     * @param string $key
+     * @return boolean
      */
     public function has($key)
     {
         $this->load();
 
-        return Arr::has($this->items, $key);
+        return Arr::has($this->data, $key);
     }
 
     /**
-     * Get the specified option value.
+     * Set a specific key to a value in the setting data.
      *
-     * @param      $key
-     * @param null $default
-     * @param int  $userId
-     *
-     * @return mixed|null
-     */
-    public function get($key, $default = null)
-    {
-        $this->read();
-
-        if ($this->has($key)) {
-            return Arr::get($this->items, $key);
-        }
-
-        return $default;
-    }
-
-    /**
-     * Set a given option value
-     *
-     * @param     $key
-     * @param     $value
-     * @param int $userId
-     *
-     * @return self
+     * @param string|array $key Key string or associative array of key => value
+     * @param mixed $value Optional only if the first argument is an array
      */
     public function set($key, $value = null)
     {
@@ -66,82 +72,112 @@ abstract class AbstractStore
 
         if (is_array($key)) {
             foreach ($key as $k => $v) {
-                $this->set($k, $v);
+                Arr::set($this->data, $k, $v);
             }
         } else {
-            Arr::set($this->items, $key, $value);
+            Arr::set($this->data, $key, $value);
         }
-
-        return $this;
     }
 
     /**
-     * @return array
-     */
-    public function all()
-    {
-        $this->load();
-
-        return $this->items;
-    }
-
-    /**
-     * Forget current option value.
+     * Unset a key in the setting data.
      *
-     * @param     $key
-     * @param int $user_id
-     *
-     * @return self
+     * @param string $key
      */
     public function forget($key)
     {
         $this->unsaved = true;
 
         if ($this->has($key)) {
-            Arr::forget($this->items, $key);
+            Arr::forget($this->data, $key);
         }
-
-        return $this;
     }
 
     /**
-     * Forget current option value.
+     * Unset all keys in the setting data.
      *
-     * @param     $key
-     * @param int $user_id
-     *
-     * @return self
+     * @return void
      */
     public function forgetAll()
     {
         $this->unsaved = true;
-        $this->items = [];
-
-        return $this;
+        $this->data    = [];
     }
 
+    /**
+     * Get all setting data.
+     *
+     * @return array
+     */
+    public function all()
+    {
+        $this->load();
+
+        return $this->data;
+    }
+
+    /**
+     * Save any changes done to the setting data.
+     *
+     * @return void
+     */
+    public function save()
+    {
+        if (!$this->unsaved) {
+            // either nothing has been changed, or data has not been loaded, so
+            // do nothing by returning early
+            return;
+        }
+
+        if (config('setting.forget_cache_by_write')) {
+            cache()->forget(static::CACHE_KEY);
+        }
+
+        $this->write($this->data);
+        $this->unsaved = false;
+    }
+
+    /**
+     * Make sure data is loaded.
+     *
+     * @param $force Force a reload of data. Default false.
+     */
     public function load($force = false)
     {
-        if (! $this->loaded || $force) {
-            $this->items = $this->read();
+        if (!$this->loaded || $force) {
+            $this->data   = $this->readData();
             $this->loaded = true;
         }
     }
 
     /**
-     * 保存配置信息到 setting.php 文件
+     * Read data from a store or cache
+     *
+     * @return array
      */
-    public function save()
+    private function readData()
     {
-        if (! $this->unsaved) {
-            return;
+        if (config('setting.enable_cache')) {
+            return cache()->remember(static::CACHE_KEY, now()->addMinutes(config('setting.cache_ttl')), function () {
+                return $this->read();
+            });
         }
 
-        $this->write($this->items);
-        $this->unsaved = false;
+        return $this->read();
     }
 
+    /**
+     * Read the data from the store.
+     *
+     * @return array
+     */
     abstract protected function read();
 
+    /**
+     * Write the data into the store.
+     *
+     * @param array $data
+     * @return void
+     */
     abstract protected function write(array $data);
 }

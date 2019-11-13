@@ -26,7 +26,7 @@ class ServiceProvider extends BaseServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/settings.php' => config_path('settings.php'),
+            __DIR__ . '/../config/setting.php' => config_path('setting.php'),
         ]);
     }
 

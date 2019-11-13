@@ -4,13 +4,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Settings Store
+    | Default Setting Store
     |--------------------------------------------------------------------------
     |
     |
     |
     */
-    'store' => 'json',
+    'store'        => env('SETTING_STORE', 'json'),
 
     /*
     |--------------------------------------------------------------------------
@@ -21,19 +21,31 @@ return [
     | file path in JSON format. USe full path to file.
     |
     */
-    'path' => storage_path('app/settings.json'),
+    'path'         => storage_path('app/settings.json'),
 
     /*
     |--------------------------------------------------------------------------
-    | Redis
+    | Database Store
     |--------------------------------------------------------------------------
-    | If the store is set to 'redis'
-    | Redis setting
+    |
+    |
     |
     */
-    'redis' => [
 
-        // Redis hash name
-        'hash_name' => env('SETTINGS_REDIS_HASH_NAME', 'settings')
-    ]
+    // If set to null, the default connection will be used.
+    'connection'   => env('SETTING_CONNECTION', null),
+
+    // Name of the table used.
+    'table'        => env('SETTING_TABLE', 'settings'),
+
+    // Cache usage
+    'enable_cache' => env('SETTING_ENABLE_CACHE', true),
+
+    // Cache time for minutes
+    'cache_ttl' => env('SETTING_CACHE_TTL', 15),
+
+    'forget_cache_by_write' => env('SETTING_FORGET_CACHE_BY_WRITE', true),
+
+    'key_column'   => env('SETTING_KEY_COLUMN', 'key'),
+    'value_column' => env('SETTING_VALUE_COLUMN', 'value'),
 ];
