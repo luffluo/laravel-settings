@@ -159,7 +159,7 @@ class DatabaseStore extends AbstractStore
         foreach ($keys as $key) {
             if (isset($insertData[$key])) {
 
-                $value = json_encode($insertData[$key]);
+                $value = json_encode($insertData[$key], JSON_UNESCAPED_UNICODE);
 
                 // 验证编辑的数据和以前的是否一样
                 // 一样就不编辑
@@ -207,12 +207,12 @@ class DatabaseStore extends AbstractStore
             foreach ($data as $key => $value) {
                 $dbData[] = array_merge(
                     $this->extraColumns,
-                    [$this->keyColumn => $key, $this->valueColumn => json_encode($value)]
+                    [$this->keyColumn => $key, $this->valueColumn => json_encode($value, JSON_UNESCAPED_UNICODE)]
                 );
             }
         } else {
             foreach ($data as $key => $value) {
-                $dbData[] = [$this->keyColumn => $key, $this->valueColumn => json_encode($value)];
+                $dbData[] = [$this->keyColumn => $key, $this->valueColumn => json_encode($value, JSON_UNESCAPED_UNICODE)];
             }
         }
 

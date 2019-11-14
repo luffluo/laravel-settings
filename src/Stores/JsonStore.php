@@ -47,7 +47,7 @@ class JsonStore extends AbstractStore
     protected function write(array $data)
     {
         if ($data) {
-            $contents = json_encode($data);
+            $contents = json_encode($data, JSON_UNESCAPED_UNICODE);
         } else {
             $contents = '{}';
         }
