@@ -224,7 +224,16 @@ class DatabaseStore extends AbstractStore
      */
     protected function read()
     {
-        return $this->parseReadData($this->newQuery()->get());
+        try {
+
+            return $this->parseReadData($this->newQuery()->get());
+
+        } catch (\Exception $e) {
+
+            logger()->error($e->getMessage());
+
+            return [];
+        }
     }
 
     /**
