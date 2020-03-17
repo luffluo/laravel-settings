@@ -6,20 +6,27 @@
 $ composer require luffluo/laravel-settings:~1.2
 ```
 
+## 如果要自定义配置，执行下面的命令发布配置文件
+```shell
+php artisan vendor:publish --provider="Luffluo\LaravelSettings\ServiceProvider" --tag="config"
+```
+
 ## Usage
 
 Add the middleware 'Luffluo\\LaravelSettings\\SaveMiddleware' to your middleware for Auto save.
 
 ```php
-setting('key', 'default') // get
+<?php
 
-setting(['key' => 'value'])->save() // set
+setting('key', 'default'); // get
+
+setting(['key' => 'value'])->save(); // set
 
 setting()->all(); // get all
 
-setting()->forget('key')->save() // forget
+setting()->forget('key')->save(); // forget
 
-setting()->forgetAll()->save() // forget all
+setting()->forgetAll()->save(); // forget all
 ```
 
 ## License

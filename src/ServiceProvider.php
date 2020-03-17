@@ -14,20 +14,24 @@ class ServiceProvider extends BaseServiceProvider
      */
     protected $defer = true;
 
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/setting.php' => config_path('setting.php'),
+            ], 'config');
+        }
+    }
+
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/setting.php', 'setting');
+
         $this->app->singleton('setting', function ($app) {
             return new SettingManager($app);
         });
 
         $this->app->alias('setting', SettingManager::class);
-    }
-
-    public function boot()
-    {
-        $this->publishes([
-            __DIR__ . '/../config/setting.php' => config_path('setting.php'),
-        ]);
     }
 
     /**

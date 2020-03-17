@@ -10,7 +10,7 @@ return [
     |
     |
     */
-    'store'        => env('SETTING_STORE', 'json'),
+    'store'        => env('SETTING_STORE', 'database'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,10 +42,10 @@ return [
     'enable_cache' => env('SETTING_ENABLE_CACHE', true),
 
     // Cache time for minutes
-    'cache_ttl' => env('SETTING_CACHE_TTL', 15),
+    'cache_ttl' => env('SETTING_CACHE_TTL', 120),
 
     'forget_cache_by_write' => env('SETTING_FORGET_CACHE_BY_WRITE', true),
 
-    'key_column'   => env('SETTING_KEY_COLUMN', 'key'),
+    'key_column'   => env('SETTING_KEY_COLUMN', 'name'),
     'value_column' => env('SETTING_VALUE_COLUMN', 'value'),
 ];
