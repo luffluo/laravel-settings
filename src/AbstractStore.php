@@ -64,11 +64,11 @@ abstract class AbstractStore
      *
      * @param string|array $key Key string or associative array of key => value
      * @param mixed $value Optional only if the first argument is an array
+     * @return static
      */
     public function set($key, $value = null)
     {
         $this->load();
-        $this->unsaved = true;
 
         if (is_array($key)) {
             foreach ($key as $k => $v) {
@@ -77,31 +77,40 @@ abstract class AbstractStore
         } else {
             Arr::set($this->data, $key, $value);
         }
+
+        $this->unsaved = true;
+
+        return $this;
     }
 
     /**
      * Unset a key in the setting data.
      *
      * @param string $key
+     * @return static
      */
     public function forget($key)
     {
-        $this->unsaved = true;
-
         if ($this->has($key)) {
             Arr::forget($this->data, $key);
         }
+
+        $this->unsaved = true;
+
+        return $this;
     }
 
     /**
      * Unset all keys in the setting data.
      *
-     * @return void
+     * @return static
      */
     public function forgetAll()
     {
         $this->unsaved = true;
         $this->data    = [];
+
+        return $this;
     }
 
     /**
@@ -148,6 +157,8 @@ abstract class AbstractStore
             $this->data   = $this->readData();
             $this->loaded = true;
         }
+
+        return $this;
     }
 
     /**

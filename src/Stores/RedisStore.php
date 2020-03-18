@@ -66,7 +66,7 @@ class RedisStore extends AbstractStore
      * @param     $value
      * @param int $userId
      *
-     * @return self
+     * @return static
      */
     public function set($key, $value = null)
     {
@@ -105,7 +105,7 @@ class RedisStore extends AbstractStore
      * @param     $key
      * @param int $user_id
      *
-     * @return self
+     * @return static
      */
     public function forget($key)
     {
@@ -124,7 +124,7 @@ class RedisStore extends AbstractStore
      * @param     $key
      * @param int $user_id
      *
-     * @return self
+     * @return static
      */
     public function forgetAll()
     {

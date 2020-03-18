@@ -118,6 +118,7 @@ class DatabaseStore extends AbstractStore
 
     /**
      * {@inheritdoc}
+     * @return static
      */
     public function forget($key)
     {
@@ -140,6 +141,8 @@ class DatabaseStore extends AbstractStore
             $this->forget($segment);
             array_pop($segments);
         }
+
+        return $this;
     }
 
     /**
